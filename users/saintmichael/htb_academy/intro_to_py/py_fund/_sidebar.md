@@ -1,10 +1,8 @@
 - [Home](README.md)
 - [Users](users/README.md)
 - [HTB Academy]
-    - [Intro to InfoSec](/users/saintmichael/htb_academy/intro_to_infosec/README.md)
-    - [Intro To Network](users/saintmichael/htb_academy/intro_to_networking/README.md)
-    - [Intro To WinCMD](/users/saintmichael/htb_academy/intro_to_wincmd/README.md)
-    - [Intro to Python](/users/saintmichael/htb_academy/intro_to_py/README.md)
+    - [Back](/users/saintmichael/htb_academy/intro_to_networking/README.md)
+    - [Introduction](/users/saintmichael/htb_academy/intro_to_wincmd/introduction/introduction.md)
 - [Links]
     - [The Github](https://github.com/saintmicha3l/DGWiki)
     - [Digital Gangster OG](https://www.digitalgangster.com)
