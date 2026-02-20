@@ -197,7 +197,7 @@ function typeWrite(element) {
 
 Based on the above, `/panel/` is where the magic happens.
 
-![panel]!(https://dgwiki.dg4e.net/users/saintmichael/tryhackme/easy/img/rootme1.png)
+![panel](https://dgwiki.dg4e.net/users/saintmichael/tryhackme/easy/img/rootme1.png)
 
 ---
 
@@ -207,7 +207,7 @@ The PHP reverse shell used: [pentestmonkey/php-reverse-shell](https://github.com
 
 Attempting to upload the reverse shell via `/panel/` fails — `.php` files are blocked.
 
-![fail]!(https://dgwiki.dg4e.net/users/saintmichael/tryhackme/easy/img/rootme2.png)
+![fail](https://dgwiki.dg4e.net/users/saintmichael/tryhackme/easy/img/rootme2.png)
 
 After some research, PHP supports alternative extensions: `.phtml`, `.php3`, `.php4`, `.php5`, `.php7`, `.phps`. Renaming the file to `.php5` bypasses the filter.
 
