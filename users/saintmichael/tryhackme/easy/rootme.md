@@ -18,8 +18,6 @@
 
 ### Task 2: Reconnaissance
 
-### Task 2: Reconnaissance
-
 | Question                                      | Answer                                                |
 | --------------------------------------------- | ----------------------------------------------------- |
 | Scan the machine, how many ports are open?    | <details><summary>Reveal</summary>`2`</details>       |
