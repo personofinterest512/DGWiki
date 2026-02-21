@@ -8,7 +8,7 @@
 | ---------------- | ---------- |
 | **Machine Name** | Agent Sudo |
 | **Date**         | 2/20/2026  |
-| **Completed**    |            |
+| **Completed**    | 2/20/2026  |
 | **Attacker OS**  | Kali Linux |
 | **Difficulty**   | Easy       |
 
