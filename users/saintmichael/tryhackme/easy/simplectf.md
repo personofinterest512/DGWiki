@@ -134,10 +134,10 @@ FTP server status:
 
 Supported Methods: `OPTIONS` `GET` `HEAD` `POST`
 
-| robots.txt Entry   | Notes                              |
-| ------------------ | ---------------------------------- |
-| `/`                | Disallowed                         |
-| `/openemr-5_0_1_3` | Disallowed — **high value target** |
+| robots.txt Entry   | Notes      |
+| ------------------ | ---------- |
+| `/`                | Disallowed |
+| `/openemr-5_0_1_3` | Disallowed |
 
 #### Port 2222 — SSH
 
