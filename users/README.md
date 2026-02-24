@@ -2,7 +2,7 @@
 
 Select a user to view their DGWiki Profile:
 
-- [Illy](/users/illy/README.md)
+- [illy](/users/illy/README.md)
 - [maxx](/users/maxx/README.md)
 - [moscovium-mc](/users/moscovium-mc/README.md)
 - [saintmichael](/users/saintmichael/README.md)
