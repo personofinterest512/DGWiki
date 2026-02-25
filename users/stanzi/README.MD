@@ -1,25 +1,37 @@
 # stanzi wiki :green_heart:
 
 ## about me ~
-![stanzi on cam](https://imgur.com/UPSisox)
+
+<img width="424" height="347" alt="Image" src="https://github.com/user-attachments/assets/4c858a95-8eab-4baa-bb0e-fe6b2cc369dc" />
+
 bachelor's degree in computer science, love for hacking culture and community, family over everything
 
 ## contact/follow me ~
 x.com/stanziirl
+
 stanzi@anon.works
+
 tryhackme.com/p/stanzi
 
 ## todo ~
-+add posts for THM rooms i've completed
-+complete tcm security course modules
-+create art/music
-+plan defcon parties
-+fuck bitches get money
-+hack the planet
++ add posts for THM rooms i've completed
+
++ complete tcm security course modules
+
++ create art/music
+
++ plan defcon parties
+
++ fuck bitches get money
+
++ hack the planet
 
 born to :3, forced to dg4e - sysko
+
 i'll have you know i'm a moderator and will navy a seal - kayos
+
 i was accused of being a narcissist but im a living god so i dont give a fuck - ytcracker
+
 gosh stangit - stanzi
 
 ## PGP
@@ -60,5 +72,6 @@ GKvDn/g/HKuYOGA=
 =resO
 -----END PGP PUBLIC KEY BLOCK-----
 ```
+
 
 okay baaiii ^.^ thanks for checking out my wiki i love all my internet friends!
