@@ -1,7 +1,5 @@
 - [Home](README.md)
 - [Users](users/README.md)
-- [Scraped Learning]
-    - [HTB Academy](users/saintmichael/htb_academy/README.md)
 - [CTF Write-ups]
     - [TryHackMe](users/saintmichael/tryhackme/README.md)
     - [HackTheBox](users/saintmichael/hackthebox/README.md)
