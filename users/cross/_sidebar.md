@@ -1,8 +1,5 @@
 - [Home](README.md)
 - [Users](users/README.md)
-- [CTF Write-ups]
-    - [TryHackMe](users/saintmichael/tryhackme/README.md)
-    - [HackTheBox](users/saintmichael/hackthebox/README.md)
 - [Resources](resources/README.md)
 - [Links]
     - [The Github](https://github.com/saintmicha3l/DGWiki)
